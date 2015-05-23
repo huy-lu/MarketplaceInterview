@@ -94,5 +94,43 @@ namespace Marketplace.Interview.Tests
 
             Assert.That(basketShipping, Is.EqualTo(3.35m));
         }
+
+        [Test]
+        public void NewPerRegionShippingTest()
+        {
+            var newPerRegionShippingOption = new NewPerRegionShipping()
+            {
+                PerRegionCosts = new[] 
+                {
+                    new RegionShippingCost()
+                    {
+                        Amount = 2, // UK £ Pound
+                        DestinationRegion = RegionShippingCost.Regions.UK
+                    },
+                    new RegionShippingCost()
+                    {
+                        Amount = 20, // UK £ Pound
+                        DestinationRegion = RegionShippingCost.Regions.RestOfTheWorld
+                    },
+                    new RegionShippingCost()
+                    {
+                        Amount = 20, // UK £ Pound
+                        DestinationRegion = RegionShippingCost.Regions.Europe
+                    },
+                }
+            };
+
+            var shippingAmount = newPerRegionShippingOption.GetAmount(new LineItem() { DeliveryRegion = RegionShippingCost.Regions.Europe }, new Basket());
+
+            Assert.AreEqual(20, shippingAmount);
+
+            shippingAmount = newPerRegionShippingOption.GetAmount(new LineItem() { DeliveryRegion = RegionShippingCost.Regions.UK }, new Basket());
+
+            Assert.AreEqual(2, shippingAmount);
+
+            shippingAmount = newPerRegionShippingOption.GetAmount(new LineItem() { DeliveryRegion = RegionShippingCost.Regions.RestOfTheWorld }, new Basket());
+
+            Assert.AreEqual( 20, shippingAmount);
+        }
     }
 }
