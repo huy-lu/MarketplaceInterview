@@ -132,5 +132,69 @@ namespace Marketplace.Interview.Tests
 
             Assert.AreEqual( 20, shippingAmount);
         }
+
+        [Test]
+        public void DeductShippingWhenThereIsAtLeastOneOtherItemInBasketWithTheSameShippingOptionSupplierAndRegionTest()
+        {
+            var newPerRegionShippingOption = new NewPerRegionShipping()
+            {
+                PerRegionCosts = new[] 
+                {
+                    new RegionShippingCost()
+                    {
+                        Amount = 30, // UK £ Pound
+                        DestinationRegion = RegionShippingCost.Regions.UK
+                    }
+                }
+            };
+
+            var perRegionShippingOption = new PerRegionShipping()
+            {
+                PerRegionCosts = new[] 
+                {
+                    new RegionShippingCost()
+                    {
+                        Amount = 25, // UK £ Pound
+                        DestinationRegion = RegionShippingCost.Regions.UK
+                    }
+                }
+            };
+
+            var basket = new Basket()
+            {
+                LineItems = new List<LineItem>()
+                {
+                    new LineItem()
+                    {
+                        ProductId = "P1",
+                        SupplierId = 1,
+                        DeliveryRegion = RegionShippingCost.Regions.UK,
+                        Shipping = newPerRegionShippingOption
+                    },
+                    new LineItem()
+                    {
+                        ProductId = "P2",
+                        SupplierId = 1,
+                        DeliveryRegion = RegionShippingCost.Regions.UK,
+                        Shipping = newPerRegionShippingOption // new option was added
+                    },
+                    new LineItem()
+                    {
+                        ProductId = "P3",
+                        SupplierId = 3,
+                        DeliveryRegion = RegionShippingCost.Regions.UK,
+                        Shipping = perRegionShippingOption
+                    }
+                }
+            };
+
+            var rule = new SameShippingOptionSupplierAndRegionRule(50m); // 50pence
+
+            var calculator = new ShippingCalculator();
+
+            decimal basketShipping = calculator.CalculateShipping(basket, rule);
+
+            Assert.AreEqual(84.5, basketShipping);
+        }
     }
 }
