@@ -57,6 +57,7 @@
     <Compile Include="Basket\Basket.cs" />
     <Compile Include="Basket\BasketOperationBase.cs" />
     <Compile Include="Basket\GetBasketQuery.cs" />
+    <Compile Include="Basket\RuleCalculator.cs" />
     <Compile Include="Core\ICommand.cs" />
     <Compile Include="Core\IQuery.cs" />
     <Compile Include="Core\IWorkflow.cs" />

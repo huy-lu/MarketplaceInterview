@@ -23,5 +23,10 @@ namespace Marketplace.Interview.Business.Basket
         public decimal ShippingAmount { get; set; }
 
         public string ShippingDescription { get; set; }
+
+        public override int GetHashCode()
+        {
+            return SupplierId.GetHashCode() ^ DeliveryRegion.GetHashCode() ^ Shipping.GetHashCode();
+        }
     }
 }

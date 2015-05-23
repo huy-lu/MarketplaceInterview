@@ -5,6 +5,7 @@ namespace Marketplace.Interview.Business.Basket
     public interface IShippingCalculator
     {
         decimal CalculateShipping(Basket basket);
+        decimal CalculateShipping(Basket basket, RuleCalculator rule); 
     }
 
     public class ShippingCalculator : IShippingCalculator
@@ -18,6 +19,11 @@ namespace Marketplace.Interview.Business.Basket
             }
 
             return basket.LineItems.Sum(li => li.ShippingAmount);
+        }
+
+        public decimal CalculateShipping(Basket basket, RuleCalculator rule)
+        {
+            return rule.Apply(basket);
         }
     }
 }
